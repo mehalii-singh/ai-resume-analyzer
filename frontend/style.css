@@ -1,0 +1,400 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', sans-serif;
+    scroll-behavior: smooth;
+}
+
+body {
+    background: #080b18;
+    color: white;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 25px 8%;
+    background: #0d1224;
+}
+
+.logo {
+    font-size: 27px;
+    font-weight: bold;
+}
+
+.logo span {
+    color: #8b5cf6;
+}
+
+nav a {
+    color: #cbd5e1;
+    text-decoration: none;
+    margin: 0 15px;
+}
+
+nav a:hover {
+    color: #a78bfa;
+}
+
+.nav-btn, .primary-btn {
+    background: linear-gradient(90deg, #7c3aed, #4f46e5);
+    color: white;
+    padding: 13px 25px;
+    border-radius: 8px;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    display: inline-block;
+}
+
+.hero {
+    min-height: 520px;
+    display: flex;
+    align-items: center;
+    padding: 80px 10%;
+    background: radial-gradient(circle at 80% 40%, #29205b, #080b18 60%);
+}
+
+.hero-content {
+    max-width: 650px;
+}
+
+.badge {
+    color: #a78bfa;
+    letter-spacing: 2px;
+    font-size: 13px;
+}
+
+.hero h1 {
+    font-size: 65px;
+    margin: 25px 0;
+    line-height: 1.15;
+}
+
+.hero h1 span {
+    color: #8b5cf6;
+}
+
+.hero p {
+    color: #aab3c5;
+    font-size: 17px;
+    line-height: 1.8;
+    margin-bottom: 30px;
+}
+
+.features, .analyzer {
+    padding: 80px 10%;
+    text-align: center;
+}
+
+.features h2, .analyzer h2 {
+    font-size: 35px;
+    margin-bottom: 20px;
+}
+
+.feature-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 25px;
+    margin-top: 45px;
+}
+
+.feature-card {
+    background: #141b31;
+    padding: 35px;
+    border: 1px solid #293452;
+    border-radius: 15px;
+    text-align: left;
+    transition: 0.3s;
+}
+
+.feature-card:hover {
+    transform: translateY(-7px);
+    border-color: #8b5cf6;
+}
+
+.feature-card h3 {
+    margin-bottom: 15px;
+    color: #c4b5fd;
+}
+
+.feature-card p {
+    color: #aab3c5;
+    line-height: 1.7;
+}
+
+.analyzer {
+    background: #0d1224;
+}
+
+.analyzer > p {
+    color: #aab3c5;
+    margin-bottom: 35px;
+}
+
+#resumeForm {
+    max-width: 650px;
+    margin: auto;
+    text-align: left;
+    background: #141b31;
+    padding: 35px;
+    border-radius: 15px;
+    border: 1px solid #293452;
+}
+
+label {
+    display: block;
+    margin: 20px 0 12px;
+    color: #c4b5fd;
+}
+
+.upload-box {
+    border: 2px dashed #7655d9;
+    padding: 30px;
+    border-radius: 10px;
+    text-align: center;
+}
+
+input, textarea {
+    width: 100%;
+    padding: 14px;
+    margin-top: 10px;
+    background: #080b18;
+    color: white;
+    border: 1px solid #374151;
+    border-radius: 8px;
+}
+
+textarea {
+    resize: vertical;
+}
+
+#resumeForm button {
+    margin-top: 25px;
+    width: 100%;
+    font-size: 16px;
+}
+
+#loading {
+    margin: 25px;
+    color: #a78bfa;
+}
+
+#results {
+    max-width: 650px;
+    margin: 30px auto;
+    padding: 25px;
+    background: #141b31;
+    border-radius: 12px;
+    text-align: left;
+    overflow-wrap: anywhere;
+}
+
+footer {
+    padding: 30px;
+    text-align: center;
+    color: #94a3b8;
+}
+
+@media (max-width: 700px) {
+    .navbar {
+        flex-wrap: wrap;
+        gap: 20px;
+    }
+
+    nav {
+        width: 100%;
+    }
+
+    .hero h1 {
+        font-size: 43px;
+    }
+
+    .feature-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .hero, .features, .analyzer {
+        padding: 60px 6%;
+    }
+}
+/* ===== RESUME ANALYSIS DASHBOARD ===== */
+
+#results {
+    max-width: 900px;
+    margin: 50px auto;
+    padding: 35px;
+    background: linear-gradient(145deg, #101d3a, #172e59);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 22px;
+    color: white;
+    box-shadow: 0 15px 45px rgba(0,0,0,0.3);
+    animation: fadeIn 0.6s ease;
+}
+
+#results h2 {
+    font-size: 30px;
+    margin-bottom: 30px;
+    color: #ffffff;
+}
+
+#results h3 {
+    font-size: 18px;
+    margin-top: 25px;
+    margin-bottom: 10px;
+    color: #8db7ff;
+}
+
+#results p {
+    font-size: 15px;
+    line-height: 1.8;
+    color: #e0eaff;
+}
+
+#results ul {
+    padding-left: 22px;
+}
+
+#results li {
+    margin-bottom: 10px;
+    color: #dce7ff;
+    line-height: 1.6;
+}
+
+#results li::marker {
+    color: #60a5fa;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (max-width: 700px) {
+    #results {
+        margin: 25px 10px;
+        padding: 22px;
+    }
+
+    #results h2 {
+        font-size: 24px;
+    }
+}
+/* ===== PROFESSIONAL ATS DASHBOARD ===== */
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.dashboard-card {
+    background: rgba(255, 255, 255, 0.07);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 16px;
+    padding: 22px;
+    margin-bottom: 18px;
+}
+
+.dashboard-card h3 {
+    color: #8db7ff;
+    margin-top: 0 !important;
+}
+
+/* ATS SCORE CIRCLE */
+
+.score-circle {
+    width: 130px;
+    height: 130px;
+    border-radius: 50%;
+    margin: 20px auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: conic-gradient(
+        #38bdf8 calc(var(--score) * 1%),
+        #263b5c 0
+    );
+
+    position: relative;
+}
+
+.score-circle::before {
+    content: "";
+    position: absolute;
+    width: 105px;
+    height: 105px;
+    background: #142746;
+    border-radius: 50%;
+}
+
+.score-circle span {
+    position: relative;
+    font-size: 32px;
+    font-weight: bold;
+    color: white;
+}
+
+/* JOB MATCH BAR */
+
+.progress-bar {
+    width: 100%;
+    height: 12px;
+    background: #263b5c;
+    border-radius: 20px;
+    overflow: hidden;
+    margin: 15px 0;
+}
+
+.progress-bar div {
+    height: 100%;
+    background: linear-gradient(90deg, #38bdf8, #6366f1);
+    border-radius: 20px;
+    transition: width 1s ease;
+}
+
+/* SKILLS */
+
+.skill-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.skill {
+    background: rgba(56, 189, 248, 0.15);
+    color: #7dd3fc;
+    padding: 8px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+}
+
+.matched {
+    color: #4ade80 !important;
+}
+
+.missing {
+    color: #fb7185 !important;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 700px) {
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .dashboard-card {
+        padding: 18px;
+    }
+}

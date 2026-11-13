@@ -68,7 +68,7 @@
 
   // 4. Button ripple ---------------------------------------------------------
   document.addEventListener('click', (e) => {
-    const btn = e.target.closest('.primary-btn, .nav-btn');
+    const btn = e.target.closest('.primary-btn, .nav-btn, .cv-btn');
     if (!btn) return;
     const r = btn.getBoundingClientRect();
     const size = Math.max(r.width, r.height) * 2;
@@ -269,6 +269,154 @@
       const r = c.getBoundingClientRect();
       c.style.setProperty('--mx', e.clientX - r.left + 'px');
       c.style.setProperty('--my', e.clientY - r.top + 'px');
+    });
+  });
+})();
+// ===== More buttons =====
+(() => {
+  const toast = (msg) => {
+    const t = document.createElement('div');
+    t.className = 'cv-toast cv-ui';
+    t.textContent = msg;
+    document.body.appendChild(t);
+    requestAnimationFrame(() => t.classList.add('show'));
+    setTimeout(() => {
+      t.classList.remove('show');
+      setTimeout(() => t.remove(), 400);
+    }, 2200);
+  };
+
+  const form = document.getElementById('resumeForm');
+  const jd = document.getElementById('jobDescription');
+  const submit = form && form.querySelector('button[type="submit"]');
+  if (!form || !jd || !submit) return;
+
+  // 1. Sample job chips (skill names match your SKILLS list)
+  const samples = {
+    'Python Developer': 'python, flask, sql, git, rest api, problem solving',
+    'Web Developer': 'html, css, javascript, react, git, bootstrap',
+    'Data Analyst': 'excel, sql, power bi, data analysis, communication, python',
+    'Java Developer': 'java, sql, oop, data structures, git',
+  };
+  const chips = document.createElement('div');
+  chips.className = 'jd-chips cv-ui';
+  Object.entries(samples).forEach(([label, text]) => {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'cv-chip';
+    b.textContent = label;
+    b.onclick = () => {
+      jd.value = text;
+      jd.dispatchEvent(new Event('input'));
+      chips.querySelectorAll('.cv-chip').forEach((c) => c.classList.remove('picked'));
+      b.classList.add('picked');
+    };
+    chips.appendChild(b);
+  });
+  jd.insertAdjacentElement('beforebegin', chips);
+
+  // 2. Clear + Copy buttons
+  const makeBtn = (label) => {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'cv-btn';
+    b.textContent = label;
+    return b;
+  };
+  const row = document.createElement('div');
+  row.className = 'cv-actions cv-ui';
+  const clear = makeBtn('Clear');
+  const copy = makeBtn('Copy missing skills');
+  row.append(clear, copy);
+  submit.insertAdjacentElement('afterend', row);
+
+  clear.onclick = () => {
+    form.reset();
+    jd.dispatchEvent(new Event('input'));
+    chips.querySelectorAll('.cv-chip').forEach((c) => c.classList.remove('picked'));
+    toast('Form cleared');
+  };
+
+  copy.onclick = async () => {
+    const items = [...document.querySelectorAll('.missing')]
+      .map((el) => el.textContent.trim().replace(/^[^A-Za-z0-9+#.]+/, ''))
+      .filter((t) => t && !/missing skills/i.test(t));
+    if (!items.length) return toast('Analyze a resume first');
+    try {
+      await navigator.clipboard.writeText(items.join(', '));
+      toast('Copied: ' + items.join(', '));
+    } catch {
+      toast('Could not copy');
+    }
+  };
+})();
+// ===== Feature cards: click for details =====
+(() => {
+  const info = {
+    'ATS Score': {
+      text: 'Your resume gets a score out of 100 based on how ATS-friendly it is.',
+      points: ['Contact details are present', 'Key sections are found', 'Skills are detected', 'Achievements include numbers'],
+    },
+    'Skill Detection': {
+      text: 'CVibe scans your resume text and finds the skills you already have.',
+      points: ['Checks 60+ technical and soft skills', 'Understands short names like JS and ML', 'Shows every skill as a chip'],
+    },
+    'Job Matching': {
+      text: 'Paste a job description and see how well your skills fit it.',
+      points: ['Matched skills show in green', 'Missing skills show in red', 'Match percentage updates per job'],
+    },
+    'Smart Feedback': {
+      text: 'Get tips on what to add or improve in your resume.',
+      points: ['Checks experience and projects', 'Checks education', 'Asks for measurable results'],
+    },
+  };
+
+  const cards = document.querySelectorAll('#features [class*="card"]');
+  if (!cards.length) return;
+
+  const overlay = document.createElement('div');
+  overlay.className = 'cv-modal cv-ui';
+  overlay.innerHTML =
+    '<div class="cv-modal-box" role="dialog" aria-modal="true">' +
+    '<button class="cv-modal-close" aria-label="Close">×</button>' +
+    '<h3></h3><p></p><ul></ul>' +
+    '<button class="primary-btn cv-try">Try it now →</button></div>';
+  document.body.appendChild(overlay);
+
+  const box = overlay.querySelector('.cv-modal-box');
+  const open = (key) => {
+    const d = info[key];
+    box.querySelector('h3').textContent = key;
+    box.querySelector('p').textContent = d.text;
+    box.querySelector('ul').innerHTML = d.points.map((p) => '<li>' + p + '</li>').join('');
+    overlay.classList.add('open');
+  };
+  const close = () => overlay.classList.remove('open');
+
+  overlay.addEventListener('click', (e) => { if (e.target === overlay) close(); });
+  box.querySelector('.cv-modal-close').onclick = close;
+  addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); });
+  box.querySelector('.cv-try').onclick = () => {
+    close();
+    document.getElementById('analyzer').scrollIntoView({ behavior: 'smooth' });
+    setTimeout(() => {
+      const f = document.getElementById('resume');
+      if (f) f.focus();
+    }, 700);
+  };
+
+  cards.forEach((card) => {
+    const key = Object.keys(info).find((k) => card.textContent.includes(k));
+    if (!key) return;
+    card.tabIndex = 0;
+    card.setAttribute('role', 'button');
+    const hint = document.createElement('span');
+    hint.className = 'learn-more cv-ui';
+    hint.textContent = 'Learn more →';
+    card.appendChild(hint);
+    card.addEventListener('click', () => open(key));
+    card.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(key); }
     });
   });
 })();

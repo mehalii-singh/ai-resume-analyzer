@@ -65,7 +65,17 @@ def calculate_ats_score(text, skills):
     else:
         suggestions.append("Add your email address.")
 
-    if re.search(r'\b\d{10}\b', text):
+    phone_found = False
+    for candidate in re.findall(r'\+?\d[\d\s().-]{8,}\d', text):
+        # skip year ranges like "2021 2022 2023"
+        if re.fullmatch(r'(?:(?:19|20)\d{2}[\s.-]*)+', candidate.strip()):
+            continue
+        digits = re.sub(r'\D', '', candidate)
+        if 10 <= len(digits) <= 13:
+            phone_found = True
+            break
+
+    if phone_found:
         contact_score += 7
     else:
         suggestions.append("Add your phone number.")
@@ -84,8 +94,8 @@ def calculate_ats_score(text, skills):
 
     # 3. Education (15 points)
     education_words = [
-        "education", "university", "college",
-        "bachelor", "master", "degree"
+        "education", "university", "college", "school", "bachelor", "master",
+        "degree", "b.tech", "btech", "diploma", "12th", "hsc", "cbse",
     ]
 
     education_score = 15 if any(

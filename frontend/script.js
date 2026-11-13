@@ -28,6 +28,8 @@ form.addEventListener("submit", async function (e) {
 
         const data = await response.json();
 
+        console.log(data);
+
         if (!response.ok) {
             throw new Error(data.error || "Analysis failed.");
         }
@@ -108,6 +110,7 @@ form.addEventListener("submit", async function (e) {
                 </ul>
             </div>
         `;
+        renderBreakdown(data.score_breakdown || {});
 
         results.hidden = false;
 
@@ -118,3 +121,57 @@ form.addEventListener("submit", async function (e) {
         loading.hidden = true;
     }
 });
+function renderBreakdown(breakdown) {
+  const parts = [
+    { key: "contact", label: "Contact info", max: 15 },
+    { key: "skills", label: "Skills", max: 20 },
+    { key: "education", label: "Education", max: 15 },
+    { key: "experience", label: "Experience", max: 20 },
+    { key: "projects", label: "Projects", max: 15 },
+    { key: "achievements", label: "Achievements", max: 15 },
+  ];
+
+  const rows = parts.map((p, i) => {
+    const value = Number(breakdown[p.key]) || 0;
+    const scale = Math.min(value / p.max, 1);
+    return `
+      <div class="bd-row" style="--d:${i * 110}ms">
+        <div class="bd-label">
+          <span>${p.label}</span>
+          <span class="bd-num" data-to="${value}" data-max="${p.max}">0/${p.max}</span>
+        </div>
+        <div class="bd-track"><div class="bd-fill" style="--s:${scale}"></div></div>
+      </div>`;
+  }).join("");
+
+  const grid = document.querySelector(".dashboard-grid");
+  if (!grid) return;
+
+  const old = grid.querySelector(".breakdown-card");
+  if (old) old.remove();
+
+  const card = document.createElement("div");
+  card.className = "dashboard-card breakdown-card";
+  card.innerHTML = `<h3>Score Breakdown</h3>${rows}`;
+  grid.insertBefore(card, grid.children[2] || null);
+
+  const io = new IntersectionObserver((entries) => {
+    if (!entries[0].isIntersecting) return;
+    io.disconnect();
+    card.classList.add("in");
+    card.querySelectorAll(".bd-num").forEach((el, i) => countUp(el, i * 110 + 200));
+  }, { threshold: 0.3 });
+  io.observe(card);
+}
+
+function countUp(el, delay) {
+  const to = Number(el.dataset.to);
+  const max = el.dataset.max;
+  const start = performance.now() + delay;
+  const tick = (now) => {
+    const p = Math.min(Math.max((now - start) / 1000, 0), 1);
+    el.textContent = Math.round(to * (1 - Math.pow(1 - p, 3))) + "/" + max;
+    if (p < 1) requestAnimationFrame(tick);
+  };
+  requestAnimationFrame(tick);
+}

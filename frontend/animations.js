@@ -172,6 +172,7 @@
 
       const t = m.target.nodeType === 1 ? m.target : m.target.parentElement;
       if (!t) return;
+      if (t.closest('.breakdown-card')) return;
       if (!(form && form.contains(t))) resultsArrived = true;
 
       const card = t.closest(CARD);

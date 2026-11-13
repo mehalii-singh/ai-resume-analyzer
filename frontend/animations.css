@@ -375,3 +375,25 @@ form .primary-btn:hover { animation: none; }
 }
 .breakdown-card.in .bd-fill::after { animation: sweep 1.4s var(--ease) 1.2s 1; }
 @keyframes sweep { to { transform: translateX(100%); } }
+/* ===== History ===== */
+.history-card { grid-column: 1 / -1; }
+.history-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+.history-head h3 { margin: 0; }
+.hist-clear {
+  padding: 6px 14px; border-radius: 999px; cursor: pointer; color: #e2e8f0;
+  border: 1px solid rgba(255, 255, 255, .25); background: rgba(255, 255, 255, .08);
+  transition: transform .3s var(--ease), background .3s;
+}
+.hist-clear:hover { transform: translateY(-2px); background: rgba(251, 113, 133, .25); }
+
+.hist-row {
+  display: grid; grid-template-columns: 1.2fr 1.6fr .6fr .6fr; gap: 10px;
+  padding: 10px 12px; margin-bottom: 8px; border-radius: 10px; font-size: 14px;
+  background: rgba(255, 255, 255, .06);
+  animation: histIn .6s var(--ease) both; animation-delay: var(--d, 0ms);
+  transition: background .3s;
+}
+.hist-row:hover { background: rgba(255, 255, 255, .12); }
+.hist-score { font-weight: 600; color: #a5f3fc; }
+@keyframes histIn { from { opacity: 0; transform: translateX(-24px); } to { opacity: 1; transform: none; } }
+@media (max-width: 700px) { .hist-row { grid-template-columns: 1fr 1fr; } }

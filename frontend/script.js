@@ -112,6 +112,14 @@ form.addEventListener("submit", async function (e) {
         `;
         renderBreakdown(data.score_breakdown || {});
 
+        saveHistory({
+  date: new Date().toLocaleString(),
+  file: data.filename || "resume.pdf",
+  ats: score,
+  match: match,
+});
+renderHistory();
+
         results.hidden = false;
 
     } catch (error) {
@@ -174,4 +182,70 @@ function countUp(el, delay) {
     if (p < 1) requestAnimationFrame(tick);
   };
   requestAnimationFrame(tick);
+}
+function getHistory() {
+  try {
+    return JSON.parse(localStorage.getItem("cvibe_history") || "[]");
+  } catch (e) {
+    return [];
+  }
+}
+
+function saveHistory(entry) {
+  try {
+    const list = getHistory();
+    list.unshift(entry);
+    localStorage.setItem("cvibe_history", JSON.stringify(list.slice(0, 10)));
+  } catch (e) {}
+}
+
+function renderHistory() {
+  const grid = document.querySelector(".dashboard-grid");
+  if (!grid) return;
+
+  const old = grid.querySelector(".history-card");
+  if (old) old.remove();
+
+  const list = getHistory();
+  if (!list.length) return;
+
+  const card = document.createElement("div");
+  card.className = "dashboard-card history-card";
+
+  const head = document.createElement("div");
+  head.className = "history-head";
+  const title = document.createElement("h3");
+  title.textContent = "Past analyses";
+  const clear = document.createElement("button");
+  clear.type = "button";
+  clear.className = "hist-clear";
+  clear.textContent = "Clear history";
+  clear.onclick = () => {
+    localStorage.removeItem("cvibe_history");
+    card.remove();
+  };
+  head.append(title, clear);
+  card.appendChild(head);
+
+  list.forEach((item, i) => {
+    const row = document.createElement("div");
+    row.className = "hist-row";
+    row.style.setProperty("--d", i * 80 + "ms");
+
+    const cells = [
+      [item.date, ""],
+      [item.file, ""],
+      ["ATS " + item.ats, "hist-score"],
+      ["Match " + item.match + "%", "hist-score"],
+    ];
+    cells.forEach(([text, cls]) => {
+      const span = document.createElement("span");
+      span.textContent = text; // textContent keeps odd file names safe
+      if (cls) span.className = cls;
+      row.appendChild(span);
+    });
+    card.appendChild(row);
+  });
+
+  grid.appendChild(card);
 }

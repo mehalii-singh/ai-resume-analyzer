@@ -1,7 +1,7 @@
 const API_URL =
   location.hostname === "127.0.0.1" || location.hostname === "localhost"
     ? "http://127.0.0.1:5000"
-    : "https://YOUR-APP.onrender.com";
+    : "https://cvibe-backend-r80w.onrender.com";
 const form = document.getElementById("resumeForm");
 const loading = document.getElementById("loading");
 const results = document.getElementById("results");

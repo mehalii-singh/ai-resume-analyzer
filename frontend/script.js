@@ -1,3 +1,7 @@
+const API_URL =
+  location.hostname === "127.0.0.1" || location.hostname === "localhost"
+    ? "http://127.0.0.1:5000"
+    : "https://YOUR-APP.onrender.com";
 const form = document.getElementById("resumeForm");
 const loading = document.getElementById("loading");
 const results = document.getElementById("results");
@@ -21,7 +25,7 @@ form.addEventListener("submit", async function (e) {
     results.hidden = true;
 
     try {
-        const response = await fetch("http://127.0.0.1:5000/upload", {
+        const response = await fetch(`${API_URL}/upload`, {
             method: "POST",
             body: formData
         });
